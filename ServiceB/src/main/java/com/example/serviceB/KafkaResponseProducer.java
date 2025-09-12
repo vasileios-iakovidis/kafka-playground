@@ -19,11 +19,8 @@ public class KafkaResponseProducer {
         this.responseTopic = responseTopic;
     }
 
-    public void sendResponse(String message, String correlationId, String traceId) {
+    public void sendResponse(String message, String traceId) {
         ProducerRecord<String, String> record = new ProducerRecord<>(responseTopic, message);
-        if (correlationId != null) {
-            record.headers().add(new RecordHeader("correlationId", correlationId.getBytes(StandardCharsets.UTF_8)));
-        }
         if (traceId != null) {
             record.headers().add(new RecordHeader("traceId", traceId.getBytes(StandardCharsets.UTF_8)));
         }
@@ -31,7 +28,7 @@ public class KafkaResponseProducer {
     }
 
     // Optionally, keep the old method for compatibility
-    public void sendResponse(String message, String correlationId) {
-        sendResponse(message, correlationId, null);
+    public void sendResponse(String message) {
+        sendResponse(message, null);
     }
 }

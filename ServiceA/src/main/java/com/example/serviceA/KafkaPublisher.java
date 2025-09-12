@@ -23,10 +23,9 @@ public class KafkaPublisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Mono<Void> publishToRequestTopic(String message, String correlationId, String traceId) {
-        log.info("Step 3: Publishing the message to request topic: {} with correlationId: {} and traceId: {}", message, correlationId, traceId);
+    public Mono<Void> publishToRequestTopic(String message, String traceId) {
+        log.info("Step 3: Publishing the message to request topic: {} with traceId: {}", message, traceId);
         ProducerRecord<String, String> record = new ProducerRecord<>(requestTopic, message);
-        record.headers().add(new RecordHeader("correlationId", correlationId.getBytes(StandardCharsets.UTF_8)));
         if (traceId != null) {
             record.headers().add(new RecordHeader("traceId", traceId.getBytes(StandardCharsets.UTF_8)));
         }

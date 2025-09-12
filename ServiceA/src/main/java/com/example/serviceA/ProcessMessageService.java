@@ -17,19 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ProcessMessageService {
 
     private final KafkaPublisher publisher;
-    private final KafkaResponseConsumer responseConsumer;
 
     public Mono<String> processMessage(String message) {
         validateMessage(message);
-        String correlationId = UUID.randomUUID().toString();
         String traceId = MDC.get("traceId");
         if (traceId == null) {
             traceId = UUID.randomUUID().toString();
             MDC.put("traceId", traceId);
         }
-        return publisher.publishToRequestTopic(message, correlationId, traceId)
-                .then(responseConsumer.awaitResponse(correlationId)
-                    .timeout(Duration.ofSeconds(8), Mono.just("TIMEOUT_RESPONSE")));
+        return publisher.publishToRequestTopic(message, traceId)
+                .thenReturn("Message published");
     }
 
     private void validateMessage(String message) {

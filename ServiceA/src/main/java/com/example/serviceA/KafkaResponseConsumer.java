@@ -32,7 +32,7 @@ public class KafkaResponseConsumer {
         if (traceId != null) {
             MDC.put("traceId", traceId);
         }
-        log.info("Step 5: Received message from response-topic: {} with traceId: {}", message, traceId);
+        log.info("Step 4: Received message from response-topic: {} with traceId: {}", message, traceId);
         responses.add(message);
         if (traceId != null) {
             MDC.remove("traceId");

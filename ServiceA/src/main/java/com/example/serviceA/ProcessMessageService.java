@@ -20,12 +20,7 @@ public class ProcessMessageService {
 
     public Mono<String> processMessage(String message) {
         validateMessage(message);
-        String traceId = MDC.get("traceId");
-        if (traceId == null) {
-            traceId = UUID.randomUUID().toString();
-            MDC.put("traceId", traceId);
-        }
-        return publisher.publishToRequestTopic(message, traceId)
+        return publisher.publishToRequestTopic(message)
                 .thenReturn("Message published");
     }
 

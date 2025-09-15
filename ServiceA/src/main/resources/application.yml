@@ -6,6 +6,9 @@ logging:
     level:
 
 spring:
+  application:
+    name: serviceA
+    org: defaultOrg
   kafka:
     bootstrap-servers: localhost:9092
     producer:

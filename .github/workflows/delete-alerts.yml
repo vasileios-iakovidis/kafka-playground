@@ -1,0 +1,36 @@
+name: Manual Alerts Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      delete_group_metrics:
+        description: 'Metric alert group to delete'
+        required: false
+      delete_group_logs:
+        description: 'Log alert group to delete'
+        required: false
+      branch:
+        description: 'Branch where alerts are defined (e.g. main, feature/alerts-update)'
+        required: true
+        default: 'main'
+
+jobs:
+  delete-and-deploy-alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout specified branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Delete and Deploy Alerts
+        id: Alerting
+        uses: Maersk-Global/observability-the-pensieve-template@v2
+        with:
+          team_name: isceapiproducts
+          metrics_path: alerts/metrics
+          logs_path: alerts/logs
+          client_id: ${{ secrets.MOP_CLIENT_ID }}
+          secret_id: ${{ secrets.MOP_SECRET }}
+          delete_group_metrics: ${{ github.event.inputs.delete_group_metrics }}
+          delete_group_logs: ${{ github.event.inputs.delete_group_logs }}
